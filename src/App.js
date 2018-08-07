@@ -35,13 +35,23 @@ const Sisalto = ({ notes }) => {
 const Kurssi = ({kurssit}) => {
   return (
     <div>
-    <Otsikko otsikko={kurssit.nimi}/>
-    <Sisalto notes={kurssit.osat} />
-    <Yhteensa note={kurssit.osat}/>
+    <Otsikko otsikko={kurssit[0].nimi}/>
+    <Sisalto notes={kurssit[0].osat} />
+    <Yhteensa note={kurssit[0].osat}/>
+    <Otsikko otsikko={kurssit[1].nimi}/>
+    <Sisalto notes={kurssit[1].osat} />
+    <Yhteensa note={kurssit[1].osat}/>
     </div>
   )
 }
+
+const Kurssit = ({}) => {
+  return (
+    <Kurssi />
+  )
+}
 const App = () => {
+  const kurssi = 0
   const kurssit = [
     {
       nimi: 'Half Stack -sovelluskehitys',
@@ -83,7 +93,7 @@ const App = () => {
   ]
   return (
     <div>
-      <Kurssi kurssi={kurssit} />
+      <Kurssi kurssit={kurssit} kurssi={kurssi} />
     </div>
   )
 }

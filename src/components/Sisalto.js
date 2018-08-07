@@ -1,5 +1,6 @@
 import React from 'react'
 import Osa from './components/Osa'
+
 import App from './App'
 const Sisalto = ({ notes }) => {
    
