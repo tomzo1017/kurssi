@@ -1,101 +1,75 @@
 import React from 'react'
+import Kurssi from './components/Kurssi'
+import Note from './components/Note'
 
 
-const Otsikko = ({ otsikko }) => {
-  return (
-    <h1> {otsikko} </h1>
-  )
-}
 
-const Note = ({ note }) => {
-    return (
-      <p> {note.nimi} {note.tehtavia} </p>
-    )
-}
-
-const Yhteensa = ({note}) => {
-const map1 = note.map(x => x.tehtavia);
-const reducer = (accumulator, currentValue) => accumulator + currentValue;
-
-return (
-  <p> Yhteensä {map1.reduce(reducer)} tehtävää</p>
-)
-}
-
-const Sisalto = ({ notes }) => {
-  return (
-    <div>
-        
-        {notes.map(note =><Note key={note.id} note={note}/>)}
-        
-    </div>
-  )
-}
-
-const Kurssi = ({kurssit}) => {
-  return (
-    <div>
-    <Otsikko otsikko={kurssit[0].nimi}/>
-    <Sisalto notes={kurssit[0].osat} />
-    <Yhteensa note={kurssit[0].osat}/>
-    <Otsikko otsikko={kurssit[1].nimi}/>
-    <Sisalto notes={kurssit[1].osat} />
-    <Yhteensa note={kurssit[1].osat}/>
-    </div>
-  )
-}
-
-const Kurssit = ({}) => {
-  return (
-    <Kurssi />
-  )
-}
-const App = () => {
-  const kurssi = 0
-  const kurssit = [
-    {
-      nimi: 'Half Stack -sovelluskehitys',
-      id: 1,
-      osat: [
+class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      persons: [
         {
-          nimi: 'Reactin perusteet',
-          tehtavia: 10,
-          id: 1
-        },
-        {
-          nimi: 'Tiedonvälitys propseilla',
-          tehtavia: 7,
-          id: 2
-        },
-        {
-          nimi: 'Komponenttien tila',
-          tehtavia: 14,
-          id: 3
+          name: 'Arto Hellas'
         }
-      ]
-    },
-    {
-      nimi: 'Node.js',
-      id: 2,
-      osat: [
-        {
-          nimi: 'Routing',
-          tehtavia: 3,
-          id: 1
-        },
-        {
-          nimi: 'Middlewaret',
-          tehtavia: 7,
-          id: 2
-        }
-      ]
+        
+      ], 
+      newName: ''
     }
-  ]
-  return (
-    <div>
-      <Kurssi kurssit={kurssit} kurssi={kurssi} />
-    </div>
-  )
-}
+  }
 
+  handleNumberChange = (event) => {
+    console.log(event.target.value)
+    this.setState({ newName: event.target.value })
+  }
+
+  addNumber = (event) => {
+    event.preventDefault()
+    const nameObject = {
+      name: this.state.newName
+    
+    }
+  
+
+  const personsoriginal = this.state.persons
+  const persons = this.state.persons.concat(nameObject)
+  const namereg = this.state.newName
+
+  if (!namereg.replace(/\s/g, '').length) {
+
+    alert("field cant be empty.");
+  }  else if (personsoriginal.includes("paska")){
+    console.log("piss") 
+  } else {
+  this.setState({
+      persons, 
+      newName: '',
+      showAll: true
+  })
+  console.log(personsoriginal)
+}
+  }
+  render() {
+    
+
+    return (
+      <div>
+        <h1>Puhelinluettelo</h1>
+        <form onSubmit={this.addNumber}>
+          <div>
+            nimi: <input  value={this.state.newName} onChange={this.handleNumberChange}/>
+            <button type="submit">lisää</button>
+
+            </div>
+            <div>
+              </div>
+          </form>  
+          <h2> Numerot </h2>
+            <ul>
+            {this.state.persons.map(note => <Note key={note.name} note={note}/>)}
+            </ul>
+      </div>
+    )
+  }
+}
 export default App
