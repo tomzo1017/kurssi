@@ -1,75 +1,87 @@
 import React from 'react'
-import Kurssi from './components/Kurssi'
 import Note from './components/Note'
-
-
+import axios from 'axios'
 
 class App extends React.Component {
-  constructor(props) {
-    super(props)
+  constructor() {
+    super()
     this.state = {
-      persons: [
-        {
-          name: 'Arto Hellas'
-        }
-        
-      ], 
-      newName: ''
+      notes: [],
+      newNote: '',
+      showAll: true,
+      countryFilter: '',
+      warning: "insert "
     }
+    console.log('constructor')
   }
 
-  handleNumberChange = (event) => {
-    console.log(event.target.value)
-    this.setState({ newName: event.target.value })
+  toggleVisible = () => {
+    this.setState({ showAll: !this.state.showAll })
   }
 
-  addNumber = (event) => {
+  addNote = (event) => {
     event.preventDefault()
-    const nameObject = {
-      name: this.state.newName
-    
+    const noteObject = {
+      content: this.state.newNote,
+      date: new Date().new,
+      important: Math.random() > 0.5,
+      id: this.state.notes.length + 1
     }
-  
 
-  const personsoriginal = this.state.persons
-  const persons = this.state.persons.concat(nameObject)
-  const namereg = this.state.newName
+    const notes = this.state.notes.concat(noteObject)
 
-  if (!namereg.replace(/\s/g, '').length) {
-
-    alert("field cant be empty.");
-  }  else if (personsoriginal.includes("paska")){
-    console.log("piss") 
-  } else {
-  this.setState({
-      persons, 
-      newName: '',
-      showAll: true
-  })
-  console.log(personsoriginal)
-}
+    this.setState({
+      notes,
+      newNote: ''
+    })
   }
+
+  componentWillMount() {
+    console.log('did mount')
+    axios
+      .get('https://restcountries.eu/rest/v2/all')
+      .then(response => {
+        console.log('promise fulfilled')
+        this.setState({ notes: response.data })
+      })
+  }
+
+  handleNoteChange = (event) => {
+    console.log(event.target.value)
+    this.setState({ newNote: event.target.value })
+  }
+  
+  countryFilterChange = (event) => {
+    console.log(event.target.value)
+    this.setState({ countryFilter: event.target.value })
+
+  }
+
   render() {
-    
+    console.log('render')
+    const notesToShow = 
+    this.state.countryFilter ? 
+    this.state.notes.filter(note => note.name.toLowerCase().includes(this.state.countryFilter.toLowerCase())) :
+    this.state.notes
+
+    const label = this.state.showAll ? 'vain tärkeät' : 'kaikki'
 
     return (
       <div>
-        <h1>Puhelinluettelo</h1>
-        <form onSubmit={this.addNumber}>
-          <div>
-            nimi: <input  value={this.state.newName} onChange={this.handleNumberChange}/>
-            <button type="submit">lisää</button>
-
-            </div>
-            <div>
-              </div>
-          </form>  
-          <h2> Numerot </h2>
-            <ul>
-            {this.state.persons.map(note => <Note key={note.name} note={note}/>)}
-            </ul>
+        <h1>Muistiinpanot</h1>
+      
+       
+        <form onSubmit={this.addNote}>
+          <input 
+            value={this.state.countryFilter} 
+            onChange={this.countryFilterChange}
+          />
+ <ul>
+          {notesToShow.map(note => <Note key={note.id} note={note} />)}
+        </ul>        </form>
       </div>
     )
   }
 }
+
 export default App
