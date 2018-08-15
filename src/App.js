@@ -63,7 +63,8 @@ class App extends React.Component {
     this.state.countryFilter ? 
     this.state.notes.filter(note => note.name.toLowerCase().includes(this.state.countryFilter.toLowerCase())) :
     this.state.notes
-
+    
+      
     const label = this.state.showAll ? 'vain tärkeät' : 'kaikki'
 
     return (
@@ -76,8 +77,8 @@ class App extends React.Component {
             value={this.state.countryFilter} 
             onChange={this.countryFilterChange}
           />
- <ul>
-          {notesToShow.map(note => <Note key={note.id} note={note} />)}
+ <ul>       
+          {notesToShow.map(note => <Note key={note.name} note={note} />)}
         </ul>        </form>
       </div>
     )
