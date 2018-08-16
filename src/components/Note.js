@@ -1,10 +1,11 @@
 import React from 'react'
+import JustOne from './JustOne'
 
 const Note = ({ note }) => {
   
   
   return (
-    <li>{note.name} </li>
+    <li onClick={() => <JustOne key={note.name} note={note} />}>{note.name} </li>
   )
 }
 

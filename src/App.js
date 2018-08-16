@@ -1,7 +1,7 @@
 import React from 'react'
 import Note from './components/Note'
 import axios from 'axios'
-
+import EntryParser from './components/EntryParser'
 class App extends React.Component {
   constructor() {
     super()
@@ -63,7 +63,13 @@ class App extends React.Component {
     this.state.countryFilter ? 
     this.state.notes.filter(note => note.name.toLowerCase().includes(this.state.countryFilter.toLowerCase())) :
     this.state.notes
-    
+
+    const parseNotes = () => {
+      if (notesToShow.length >= 10) {
+        console.log("length")
+      }
+    }
+    parseNotes()
       
     const label = this.state.showAll ? 'vain tärkeät' : 'kaikki'
 
@@ -78,7 +84,7 @@ class App extends React.Component {
             onChange={this.countryFilterChange}
           />
  <ul>       
-          {notesToShow.map(note => <Note key={note.name} note={note} />)}
+          <EntryParser notesToShow={notesToShow} />
         </ul>        </form>
       </div>
     )
