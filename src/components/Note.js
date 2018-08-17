@@ -13,11 +13,11 @@ export default Note
 */
 import React from 'react'
 
-const Note = ({ note, toggleImportance }) => {
+const Note = ({ note, eventFactory}) => {
   const label = note.important ? 'make not important' : 'make important'
    
   return (
-    <li> {note.content} <button onClick={toggleImportance}>{label}</button></li>
+    <li> {note.name} {note.number} <button onClick={eventFactory}> Poista </button></li>
   )
 }
 

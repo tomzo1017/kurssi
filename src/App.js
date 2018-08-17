@@ -89,11 +89,13 @@ class App extends React.Component {
 
 export default App
 */
+
+/*
 import React from 'react'
 import Note from './components/Note'
 import axios from 'axios'
 import noteService from './services/notes'
-
+import Rajaus from './components/Rajaus'
 class App extends React.Component {
   constructor() {
     super()
@@ -110,8 +112,8 @@ class App extends React.Component {
 componentDidMount() {
   noteService
     .getAll()
-    .then(notes => {
-      this.setState({notes})
+    .then(response => {
+      this.setState({notes: response})
     })
 }
   addNote = (event) => {
@@ -133,15 +135,46 @@ componentDidMount() {
     })
   }
 
+  addNumber = ({newnameval, newnumberval, valueArray }) => {
+    event.preventDefault()
+    const nameObject = {
+      name: newnameval,
+      number: newnumberval
+    }
+  
 
+  const persons = valueArray.concat(nameObject)
+  const namereg = newnameval
+  const numreg = newnumberval
+  const seen = new Set();
+  
+  const hasDuplicates = persons.some(function(currentObject) {
+    return seen.size === seen.add(currentObject.name).size;
+  })
+  if (!namereg.replace(/\s/g, '').length || !numreg.replace(/\s/g, '').length) {
+
+    alert("field cant be empty.");
+  }  else if (hasDuplicates){
+    alert ("no duplicates!") 
+  }  else {
+  this.setState({
+      persons, 
+      newName: '',
+      showAll: true
+  })
+  console.log(persons)
+}
+
+
+}
 
   componentWillMount() {
     console.log('will mount')
-    axios
-      .get('http://localhost:3001/notes')
-      .then(response => {
+   noteService
+      .getAll()
+      .then(notes => {
         console.log('promise fulfilled')
-        this.setState({ notes: response.data })
+        this.setState({notes })
       })
   }
 
@@ -152,21 +185,25 @@ componentDidMount() {
 
   toggleImportanceOf = (id) => {
     return () => {
-     const url = `http://localhost:3001/notes/${id}`
-
+     noteService
+     .getAll()
      const note = this.state.notes.find(n => n.id === id)
+
      console.log("note")
      const changedNote = {...note, important: !note.important }
      noteService
      .update(id, changedNote)
-    
      .then(changedNote => {
-    
+      const note = this.state.notes.find(n => n.id === id)
 
-       this.setState({
+        this.setState({
          notes: this.state.notes.map(note => note.id !== id ? note: changedNote)
          
        })
+     })
+     .catch(error => {
+       alert(`muistiinpano '${note.content}' on jo valitettavasti poistettu palvelimelta.`)
+       this.setState({ notes: this.state.notes.filter(n => n.id !== id)})
      })
   
     }
@@ -188,7 +225,7 @@ componentDidMount() {
           </button>
         </div>
         <ul>
-          {notesToShow.map(note => <Note key={note.id} note={note} toggleImportance={this.toggleImportanceOf(note.id)} />)}
+          {notesToShow.map(note => <Note key={note.id} note={note}  />)}
         </ul>
         <form onSubmit={this.addNote}>
           <input 
@@ -202,4 +239,124 @@ componentDidMount() {
   }
 }
 
+export default App
+
+*/
+
+import React from 'react'
+import Kurssi from './components/Kurssi'
+import Note from './components/Note'
+import noteService from './services/notes'
+
+
+
+class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      persons:
+      [], 
+      newName: '',
+      newNumber: '',
+      nameFilter: ''
+    }
+  }
+
+
+  componentDidMount() {
+    noteService 
+    .getAll()
+    .then(response => {
+      this.setState({persons: response})
+    })
+
+  }
+
+  handleNumberChange = (event) => {
+    console.log(event.target.value)
+    this.setState({ newName: event.target.value })
+  }
+  handleNameFilter = (event) => {
+    console.log(event.target.value)
+    this.setState({ nameFilter: event.target.value })
+ 
+  }
+  handleNmbrChange = (event) => {
+    console.log(event.target.value)
+    this.setState({ newNumber: event.target.value })
+  }
+
+  addNumber = (event) => {
+    event.preventDefault()
+    const nameObject = {
+      name: this.state.newName,
+      number: this.state.newNumber
+      
+    }
+  
+  
+    const persons = this.state.persons.concat(nameObject)
+    const namereg = this.state.newName
+    const numreg = this.state.newNumber
+    const seen = new Set();
+    const hasDuplicates = persons.some(function(currentObject) {
+      return seen.size === seen.add(currentObject.name).size;
+    })
+    if (!namereg.replace(/\s/g, '').length || !numreg.replace(/\s/g, '').length) {
+  
+      alert("field cant be empty.");
+    }  else if (hasDuplicates){
+      alert ("no duplicates!") 
+    }  else {
+      noteService
+      .create(nameObject)
+      .then(newNum => {
+    this.setState({
+      persons: this.state.persons.concat(newNum)
+    })
+  })
+  }
+}
+
+ removeContact = (id) => {
+  const note = this.state.notes.find(n => n.id === id)
+  const RemovableNote = {...note }
+      noteService 
+      .update(id, note)
+ }
+  
+  render() {
+      const numbersToShow = 
+        this.state.nameFilter ? 
+        this.state.persons.filter(note => note.name.toLowerCase().includes(this.state.nameFilter.toLowerCase())) :
+        this.state.persons
+
+
+    return (
+      <div>
+        <h1>Puhelinluettelo</h1>
+        <form onSubmit={this.addNumber}>
+        <div>
+          rajaa näytettäviä: <input value={this.state.nameFilter} onChange={this.handleNameFilter}/>
+          </div>
+          <div>
+            nimi: <input  value={this.state.newName} onChange={this.handleNumberChange}/>
+            
+
+            </div>
+            <div>
+            numero: <input value={this.state.newNumber} onChange={this.handleNmbrChange} />
+              </div>
+              <div>
+              <button type="submit">lisää</button>
+                </div>
+          </form>  
+          <h2> Numerot </h2>
+            <ul>
+            {numbersToShow.map(note => <Note key={note.name} note={note} />)}
+            </ul>
+      </div>
+    )
+  }
+}
 export default App
