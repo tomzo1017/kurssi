@@ -242,7 +242,7 @@ componentDidMount() {
 export default App
 
 */
-/*
+
 import React from 'react'
 import Kurssi from './components/Kurssi'
 import Note from './components/Note'
@@ -412,7 +412,8 @@ class App extends React.Component {
 }
 export default App
 
-*/
+/*
+
 import React from 'react'
 import Note from './components/Note'
 import axios from 'axios'
@@ -513,3 +514,5 @@ class App extends React.Component {
 
 
 export default App
+
+*/

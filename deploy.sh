@@ -1,4 +1,4 @@
 #!/bin/sh
 npm run build
-rm -rf C:\Users\TommiH\backend\build
-cp -r build C:\Users\TommiH\backend
+rm -rf  /c/Users/TommiH/backend/build
+cp -r build  /c/Users/TommiH/backend
