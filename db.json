@@ -1,83 +1,14 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": 1,
-      "important": true
-    },
-    {
-      "name": "Martti Tienari",
-      "number": "040-123456",
-      "id": 2,
-      "important": true
-    },
-    {
-      "name": "Arto Järvinen",
-      "number": "040-123456",
-      "id": 3,
-      "important": true
-    },
-    {
-      "name": "Lea Kutvonen",
-      "number": "040-123456",
-      "id": 4,
-      "important": true
-    },
-    {
-      "name": "rr",
-      "number": "rr",
-      "id": 5
-    },
-    {
-      "name": "rrr",
-      "number": "rr",
-      "id": 6
-    },
-    {
-      "name": "RRR",
-      "number": "045-131-669",
-      "id": 7
-    },
-    {
-      "name": "ff",
-      "number": "ff",
-      "id": 8
-    },
-    {
-      "name": "wgwg",
-      "number": "1114141414",
-      "id": 9
-    },
-    {
-      "name": "dwdawd",
-      "number": "awdawd",
-      "id": 10
-    },
-    {
-      "name": "tw3tt",
-      "number": "e4tet",
-      "id": 11
-    },
-    {
-      "name": "tw3ttt43t43t",
-      "number": "e4tet",
-      "id": 12
-    },
-    {
-      "name": "wfwf",
-      "number": "fwfw",
-      "id": 13
-    },
-    {
-      "name": "f",
-      "number": "f",
-      "id": 14
-    },
-    {
       "name": "Pekka Pouta",
-      "number": "f",
-      "id": 15
+      "number": "0451319668",
+      "id": 1
+    },
+    {
+      "name": "Matti Aalto",
+      "number": "0451319668",
+      "id": 3
     }
   ]
 }

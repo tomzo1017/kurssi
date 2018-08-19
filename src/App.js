@@ -242,11 +242,13 @@ componentDidMount() {
 export default App
 
 */
-
+/*
 import React from 'react'
 import Kurssi from './components/Kurssi'
 import Note from './components/Note'
 import noteService from './services/notes'
+import './index.css'
+import Notification from './components/Notification'
 
 
 
@@ -258,7 +260,9 @@ class App extends React.Component {
       [], 
       newName: '',
       newNumber: '',
-      nameFilter: ''
+      nameFilter: '',
+      error: null
+
     }
   }
 
@@ -306,24 +310,69 @@ class App extends React.Component {
   
       alert("field cant be empty.");
     }  else if (hasDuplicates){
-      alert ("no duplicates!") 
-    }  else {
+          const prompt = window.confirm(`${this.state.newName} already exists in contacts. Do you want to replace it?`)
+          if (prompt) {
+          const duplicateName = this.state.persons.find(n => n.name === this.state.newName)
+          console.log(duplicateName)
+          const newnumber = this.state.newNumber
+          const duplicateReplacement = {...duplicateName, number: newnumber}
+          console.log(duplicateReplacement)
+          noteService
+          .update(duplicateReplacement.id, duplicateReplacement)
+          .then(duplicateReplacement => {
+            const persons = this.state.persons.filter(n => n.name !== this.state.newName)
+            this.setState({
+              persons: persons.concat(duplicateReplacement),
+              error: `lisättiin ${this.state.newName}`
+            })
+            setTimeout(() => {
+              this.setState({error: null})
+            }, 5000)
+          })
+          .catch(error => {
+              this.setState({error: `${this.state.newName} on valitettavasti poistettu jo järjestelmästä.`,
+              persons: this.state.persons.filter(n => n.name !== this.state.newName)})
+          })
+        }
+      } else {
       noteService
       .create(nameObject)
       .then(newNum => {
     this.setState({
-      persons: this.state.persons.concat(newNum)
+      persons: this.state.persons.concat(newNum),
+       error: `lisättiin ${this.state.newName}`
+    
     })
+    
+    setTimeout(() => {
+      this.setState({error: null})
+    }, 5000)
   })
+  
+
   }
 }
 
  removeContact = (id) => {
-  const note = this.state.notes.find(n => n.id === id)
-  const RemovableNote = {...note }
-      noteService 
-      .update(id, note)
+   return () => {
+  const individual = this.state.persons.find(n => n.id === id)
+  const deletedPerson = {...individual}
+  console.log(deletedPerson)
+  noteService
+  .remove(id, deletedPerson)
+  .then(response => {
+    const persons = this.state.persons.filter(n => n.id !== id)
+   const result = window.confirm("do you really wanna delete this number?")
+    if (result) {
+    this.setState({
+      persons,
+     
+    })
+  
+  }
+  })
  }
+}
   
   render() {
       const numbersToShow = 
@@ -335,6 +384,8 @@ class App extends React.Component {
     return (
       <div>
         <h1>Puhelinluettelo</h1>
+        <Notification message={this.state.error}/>
+
         <form onSubmit={this.addNumber}>
         <div>
           rajaa näytettäviä: <input value={this.state.nameFilter} onChange={this.handleNameFilter}/>
@@ -353,10 +404,112 @@ class App extends React.Component {
           </form>  
           <h2> Numerot </h2>
             <ul>
-            {numbersToShow.map(note => <Note key={note.name} note={note} />)}
+            {numbersToShow.map(note => <Note key={note.name} eventFactory={this.removeContact(note.id)} note={note} />)}
             </ul>
       </div>
     )
   }
 }
+export default App
+
+*/
+import React from 'react'
+import Note from './components/Note'
+import axios from 'axios'
+import noteService from './services/notes'
+
+class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      notes: [],
+      newNote: '',
+      showAll: true
+    }
+  }
+
+  toggleVisible = () => {
+    this.setState({ showAll: !this.state.showAll })
+  }
+
+  addNote = (event) => {
+    event.preventDefault()
+    const noteObject = {
+      content: this.state.newNote,
+      date: new Date().new,
+      important: Math.random() > 0.5,
+      id: this.state.notes.length + 1
+    }
+
+    const notes = this.state.notes.concat(noteObject)
+
+    this.setState({
+      notes,
+      newNote: ''
+    })
+  }
+
+  componentDidMount() {
+    noteService
+    .getAll()
+    .then(response => {
+      this.setState({notes: response})
+    })
+  }
+
+  handleNoteChange = (event) => {
+    console.log(event.target.value)
+    this.setState({ newNote: event.target.value })
+  }
+  toggleImportanceOf = (id) => {
+    return () => {
+      const note = this.state.notes.find(n => n.id === id)
+      const changedNote = { ...note, important: !note.important }
+  
+      noteService
+        .update(id, changedNote)
+        .then(changedNote => {
+          const notes = this.state.notes.filter(n => n.id !== id)
+          this.setState({
+            notes: notes.concat(changedNote)
+          })
+        })
+        .catch(error => {
+          alert(`muistiinpano '${note.content}' on jo valitettavasti poistettu palvelimelta`)
+          this.setState({ notes: this.state.notes.filter(n => n.id !== id) })
+        })
+    }
+  }
+  render() {
+    const notesToShow =
+      this.state.showAll ?
+        this.state.notes :
+        this.state.notes.filter(note => note.important === true)
+
+    const label = this.state.showAll ? 'vain tärkeät' : 'kaikki'
+
+    return (
+      <div>
+        <h1>Muistiinpanot</h1>
+        <div>
+          <button onClick={this.toggleVisible}>
+            näytä {label}
+          </button>
+        </div>
+        <ul>
+          {notesToShow.map(note => <Note key={note.id} note={note} toggleImportance={this.toggleImportanceOf(note.id)}/>)}
+        </ul>
+        <form onSubmit={this.addNote}>
+          <input 
+            value={this.state.newNote} 
+            onChange={this.handleNoteChange}
+          />
+          <button type="submit">tallenna</button>
+        </form>
+      </div>
+    )
+  }
+}
+
+
 export default App
