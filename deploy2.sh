@@ -1,4 +1,4 @@
 #!/bin/sh
 npm run build
-rm -rf  C:/Users/TommiH/kurssi3-tehtava/build
-cp -r build C:/Users/TommiH/kurssi3-tehtava
+rm -rf  C:/Users/tommi.hautaviita/kurssi3-osa3-tehtavat/build
+cp -r build C:/Users/tommi.hautaviita/kurssi3-osa3-tehtavat
