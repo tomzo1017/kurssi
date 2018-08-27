@@ -306,10 +306,20 @@ class App extends React.Component {
     const hasDuplicates = persons.some(function(currentObject) {
       return seen.size === seen.add(currentObject.name).size;
     })
+
+    const checkDupes = (arr) => {
+      return new Set(arr).size < arr.length;
+    }
+
+    console.log(hasDuplicates)
+    console.log(persons)
+    console.log(seen)
+    
     if (!namereg.replace(/\s/g, '').length || !numreg.replace(/\s/g, '').length) {
   
       alert("field cant be empty.");
     }  else if (hasDuplicates){
+        console.log(persons)
           const prompt = window.confirm(`${this.state.newName} already exists in contacts. Do you want to replace it?`)
           if (prompt) {
           const duplicateName = this.state.persons.find(n => n.name === this.state.newName)
@@ -357,7 +367,7 @@ class App extends React.Component {
    return () => {
   const individual = this.state.persons.find(n => n.id === id)
   const deletedPerson = {...individual}
-  console.log(deletedPerson)
+  console.log(deletedPerson.id)
   noteService
   .remove(id, deletedPerson)
   .then(response => {
@@ -404,7 +414,7 @@ class App extends React.Component {
           </form>  
           <h2> Numerot </h2>
             <ul>
-            {numbersToShow.map(note => <Note key={note.name} eventFactory={this.removeContact(note.id)} note={note} />)}
+            {numbersToShow.map(person => <Note key={person.id} eventFactory={this.removeContact(person.id)} note={person} />)}
             </ul>
       </div>
     )

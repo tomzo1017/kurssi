@@ -17,7 +17,7 @@ const Note = ({ note, eventFactory, toggleImportance}) => {
   const label = note.important ? 'make not important' : 'make important'
    
   return (
-    <li className="note"> {note.name}{note.number}<button onClick={toggleImportance} /> <button onClick={eventFactory}> Poista </button></li>
+    <li className="note"> {note.name} {note.number}<button onClick={toggleImportance} /> <button onClick={eventFactory}> Poista </button></li>
   )
 }
 
