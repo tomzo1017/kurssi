@@ -1,0 +1,22 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+if ( isset($_POST["employee"]) ) {
+
+$conn = mysqli_connect('127.0.0.1','root','','mytodo');
+if (!$conn) {
+    die('Could not connect: ' . mysqli_error($con));
+} 
+
+
+$sql = "INSERT INTO todos1 (employeename, clickdate) VALUES (".$_POST['employee'].",". date('Y-m-d H:i:s') .")";
+if ( isset($_POST["employee"]) ) {
+    mysqli_query($conn,"INSERT INTO todos1 (employeename, clickdate) VALUES (".$_POST['employee'].",". date('Y-m-d H:i:s') .")");
+    mysqli_close($conn);
+
+} 
+
+}
+?> 

@@ -256,7 +256,7 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      persons:
+     persons:
       [], 
       newName: '',
       newNumber: '',
@@ -401,18 +401,16 @@ class App extends React.Component {
           rajaa näytettäviä: <input value={this.state.nameFilter} onChange={this.handleNameFilter}/>
           </div>
           <div>
-            nimi: <input  value={this.state.newName} onChange={this.handleNumberChange}/>
+            Muistiinpano: <input  value={this.state.newName} onChange={this.handleNumberChange}/>
             
 
             </div>
-            <div>
-            numero: <input value={this.state.newNumber} onChange={this.handleNmbrChange} />
-              </div>
+          
               <div>
               <button type="submit">lisää</button>
                 </div>
           </form>  
-          <h2> Numerot </h2>
+          <h2> Muistiinpanot </h2>
             <ul>
             {numbersToShow.map(person => <Note key={person.id} eventFactory={this.removeContact(person.id)} note={person} />)}
             </ul>
